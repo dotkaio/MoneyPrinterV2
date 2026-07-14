@@ -19,6 +19,7 @@ import {
   createOutreachRunner,
 } from "../application/create-outreach-services.js";
 import { platforms, type NewAccount, type Platform } from "../domain/model.js";
+import { runDashboard } from "../interface/run-dashboard.js";
 import { createRuntime, type Runtime } from "../runtime.js";
 import { errorMessage } from "../shared/errors.js";
 
@@ -87,6 +88,28 @@ program
       }
     });
   });
+
+program
+  .command("interface")
+  .alias("ui")
+  .description("open the local MoneyPrinter control center")
+  .option("--port <number>", "local HTTP port", "4317")
+  .option("--no-open", "do not open the browser automatically")
+  .action(
+    async (options: { port: string; open: boolean }, command: Command) => {
+      const port = Number.parseInt(options.port, 10);
+      if (!Number.isInteger(port) || port < 0 || port > 65_535) {
+        throw new Error("--port must be an integer between 0 and 65535");
+      }
+      await runDashboard({
+        port,
+        openBrowser: options.open,
+        ...(command.optsWithGlobals<GlobalOptions>().config === undefined
+          ? {}
+          : { configPath: command.optsWithGlobals<GlobalOptions>().config }),
+      });
+    },
+  );
 
 const databaseCommand = program
   .command("db")

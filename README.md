@@ -44,6 +44,7 @@ Edit `config.json`, then set the environment variables named there. At minimum, 
 
 ```bash
 pnpm mpv2 --help
+pnpm mpv2 interface
 pnpm mpv2 account add --platform youtube --nickname demo --niche science
 pnpm mpv2 auth connect --account <account-id>
 pnpm mpv2 auth list
@@ -56,6 +57,8 @@ pnpm worker
 Commands that can publish or send externally require both the appropriate command option and the matching global safety switch in `config.json`. YouTube uploads default to `private` unless a different privacy status is supplied.
 
 `auth connect` opens the provider authorization page for OAuth accounts and prints the exact `auth complete` command for the callback code. Bluesky uses an app password supplied through `BLUESKY_APP_PASSWORD`; Twitter records the dedicated browser-profile session. `auth import-token` reads tokens from an environment variable so secrets never appear in shell history.
+
+`pnpm mpv2 interface` starts the local control center at `http://127.0.0.1:4317` and opens it in the default browser. The first dashboard surfaces account connection state, durable jobs, schedules, safety gates, and live preflight results without exposing stored credentials.
 
 ## Legacy migration
 
