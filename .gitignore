@@ -13,3 +13,6 @@ dist/
 coverage/
 data/
 .pnpm-store/
+AGENTS 2.md
+README 2.md
+src/application/preflight 2.ts
