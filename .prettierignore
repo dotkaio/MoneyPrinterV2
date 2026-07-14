@@ -1,0 +1,9 @@
+dist
+node_modules
+coverage
+data
+.pnpm-store
+legacy
+pnpm-lock.yaml
+CODE_OF_CONDUCT.md
+* 2.md

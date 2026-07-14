@@ -8,6 +8,8 @@ MoneyPrinterV2 is an open source project and we encourage contributions. However
 4. **Only one feature or bug fix per PR.** If you have multiple changes, please open multiple PRs.
 5. **All PRs should be opened with the `WIP` label if they are not ready to be merged.** If your PR is not ready to be merged, please open it with the `WIP` label and remove the label when it is ready to be merged.
 
+Install with `pnpm install --frozen-lockfile` and run `pnpm check && pnpm compile` before opening a PR. New application code is strict TypeScript under `src/`; `legacy/python/` is frozen for rollback and migration reference.
+
 If you have any questions about contributing, please open an issue and ask. We are happy to help you get started.
 
 # Code of Conduct

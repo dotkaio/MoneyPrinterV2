@@ -1,0 +1,59 @@
+{
+  "name": "moneyprinterv2",
+  "version": "3.0.0-alpha.1",
+  "private": true,
+  "description": "Local-first content generation, publishing, affiliate, and outreach automation",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "packageManager": "pnpm@11.11.0",
+  "engines": {
+    "node": ">=24 <27"
+  },
+  "bin": {
+    "moneyprinter": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "compile": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
+    "mpv2": "tsx src/cli/index.ts",
+    "worker": "tsx src/worker/index.ts",
+    "start": "node dist/cli/index.js",
+    "worker:compiled": "node dist/worker/index.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "cheerio": "^1.2.0",
+    "commander": "^15.0.0",
+    "croner": "^10.0.1",
+    "csv-parse": "^7.0.1",
+    "drizzle-orm": "^0.45.2",
+    "execa": "^9.6.1",
+    "google-auth-library": "^10.9.0",
+    "nodemailer": "^9.0.3",
+    "ollama": "^0.6.3",
+    "pino": "^10.3.1",
+    "playwright": "^1.61.1",
+    "sharp": "^0.35.3",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^26.1.1",
+    "@types/nodemailer": "^8.0.1",
+    "@vitest/coverage-v8": "^4.1.10",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^10.6.0",
+    "prettier": "^3.9.4",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.63.0",
+    "vitest": "^4.1.10"
+  }
+}
