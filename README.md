@@ -4,6 +4,8 @@ MoneyPrinterV2 is a local-first TypeScript CLI for generating and publishing sho
 
 The previous Python application is preserved under [`legacy/python`](legacy/python/README.md). New development happens in the TypeScript application at the repository root.
 
+[![Sponsor](https://readme.cash/i/d3t49gsk71.svg)](https://readme.cash/c/d3t49gsk71)
+
 ## Workflows
 
 - YouTube Shorts: Ollama script and metadata, Gemini images, Piper narration, whisper.cpp subtitles, FFmpeg rendering, and resumable YouTube Data API uploads.
