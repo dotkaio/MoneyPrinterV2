@@ -1,6 +1,6 @@
 # Architecture
 
-MoneyPrinterV2 is a CLI and worker process sharing one SQLite database and artifact directory. The CLI creates accounts, content, jobs, schedules, and approvals. The worker claims jobs using leases, invokes application use cases, and records attempts so interrupted work can resume safely.
+MoneyPrinter is primarily a desktop application. Its Electron main process starts a loopback-only HTTP application server, opens the React interface in a sandboxed browser window, and embeds the durable worker and scheduler. The CLI can still operate on the same SQLite database and artifact directory for advanced automation.
 
 ## Layers
 
@@ -9,7 +9,17 @@ MoneyPrinterV2 is a CLI and worker process sharing one SQLite database and artif
 3. `application` coordinates workflows and owns policy such as state transitions, idempotency, privacy defaults, approvals, and limits.
 4. `adapters` translate ports into provider-specific APIs or subprocesses.
 5. `infrastructure` validates configuration and persists state.
-6. `cli` and `worker` are delivery mechanisms over the same application layer.
+6. `interface` and `desktop` provide the standalone app; `cli` remains an advanced delivery mechanism.
+
+## Desktop boundary
+
+The desktop renderer has no Node.js integration. It can reach only the loopback application origin, which serves static production assets and a small JSON API. Mutations enforce same-origin requests, request bodies are bounded and validated with Zod, and the server applies a restrictive content security policy. External HTTPS links open in the system browser instead of navigating the application window.
+
+The main process chooses an ephemeral loopback port, stores application data under the native macOS application-support directory, and shuts down the worker, server, and database together. A single-instance lock prevents two app windows from accidentally sharing the embedded process lifecycle.
+
+## Provider-backed content studio
+
+Provider profiles contain only provider kind, model, endpoint, status, and timestamps. Raw OpenAI, Anthropic, Gemini, and OpenRouter keys live in macOS Keychain. A provider-specific adapter verifies the key before a profile becomes active. The application layer sends a provider-independent structured-generation request and persists the normalized result in the local creations library.
 
 ## Durable workflow model
 
@@ -32,5 +42,5 @@ Playwright handles sites without a suitable publishing API in this project. Each
 - Live publishing and outreach sending default to disabled.
 - Outreach requires a campaign preview followed by explicit approval.
 - Delivery enforces daily and per-domain limits and records one attempt per lead.
-- Provider secrets come from named environment variables.
+- Standalone provider keys and connected-account tokens live in macOS Keychain; optional legacy workflow secrets come from named environment variables.
 - SQLite uses foreign keys, WAL mode, busy timeouts, transactions, and ordered migrations.

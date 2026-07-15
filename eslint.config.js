@@ -5,9 +5,11 @@ export default tseslint.config(
   {
     ignores: [
       "dist/**",
+      ".vercel/**",
       "node_modules/**",
       "coverage/**",
       "data/**",
+      "release/**",
       "eslint.config.js",
     ],
   },

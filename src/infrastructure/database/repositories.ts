@@ -1,9 +1,23 @@
-import { and, asc, eq, gte, inArray, isNull, lte, or } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gte,
+  inArray,
+  isNull,
+  lte,
+  or,
+} from "drizzle-orm";
 
 import type {
   Account,
+  AiProviderKind,
+  AiProviderProfile,
   AffiliateProduct,
   Artifact,
+  ContentCreation,
   ContentItem,
   ContentKind,
   ContentState,
@@ -21,9 +35,11 @@ import { createId, nowIso } from "../../shared/ids.js";
 import type { DatabaseContext } from "./client.js";
 import {
   accounts,
+  aiProviderProfiles,
   affiliateProducts,
   artifacts,
   contentItems,
+  creations,
   jobAttempts,
   jobs,
   outreachAttempts,
@@ -33,6 +49,132 @@ import {
   schedules,
   uploadSessions,
 } from "./schema.js";
+
+export interface SaveAiProviderProfileInput {
+  kind: AiProviderKind;
+  model: string;
+  baseUrl: string;
+}
+
+export class AiProviderProfileRepository {
+  public constructor(private readonly database: DatabaseContext) {}
+
+  public list(): readonly AiProviderProfile[] {
+    return this.database.orm
+      .select()
+      .from(aiProviderProfiles)
+      .orderBy(asc(aiProviderProfiles.createdAt))
+      .all();
+  }
+
+  public findByKind(kind: AiProviderKind): AiProviderProfile | null {
+    return (
+      this.database.orm
+        .select()
+        .from(aiProviderProfiles)
+        .where(eq(aiProviderProfiles.kind, kind))
+        .get() ?? null
+    );
+  }
+
+  public findActive(): AiProviderProfile | null {
+    return (
+      this.database.orm
+        .select()
+        .from(aiProviderProfiles)
+        .where(eq(aiProviderProfiles.active, true))
+        .get() ?? null
+    );
+  }
+
+  public saveActive(input: SaveAiProviderProfileInput): AiProviderProfile {
+    const existing = this.findByKind(input.kind);
+    const timestamp = nowIso();
+    this.database.sqlite.transaction(() => {
+      this.database.orm
+        .update(aiProviderProfiles)
+        .set({ active: false, updatedAt: timestamp })
+        .run();
+      this.database.orm
+        .insert(aiProviderProfiles)
+        .values({
+          ...input,
+          active: true,
+          createdAt: existing?.createdAt ?? timestamp,
+          updatedAt: timestamp,
+        })
+        .onConflictDoUpdate({
+          target: aiProviderProfiles.kind,
+          set: {
+            model: input.model,
+            baseUrl: input.baseUrl,
+            active: true,
+            updatedAt: timestamp,
+          },
+        })
+        .run();
+    })();
+    const profile = this.findByKind(input.kind);
+    if (profile === null) {
+      throw new Error(`AI provider profile disappeared: ${input.kind}`);
+    }
+    return profile;
+  }
+
+  public delete(kind: AiProviderKind): void {
+    this.database.orm
+      .delete(aiProviderProfiles)
+      .where(eq(aiProviderProfiles.kind, kind))
+      .run();
+  }
+}
+
+export type CreateContentCreationInput = Omit<
+  ContentCreation,
+  "id" | "createdAt" | "updatedAt"
+>;
+
+export class ContentCreationRepository {
+  public constructor(private readonly database: DatabaseContext) {}
+
+  public create(input: CreateContentCreationInput): ContentCreation {
+    const timestamp = nowIso();
+    const creation: ContentCreation = {
+      id: createId(),
+      ...input,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    };
+    this.database.orm.insert(creations).values(creation).run();
+    return creation;
+  }
+
+  public list(limit = 50): readonly ContentCreation[] {
+    return this.database.orm
+      .select()
+      .from(creations)
+      .orderBy(desc(creations.createdAt))
+      .limit(limit)
+      .all();
+  }
+
+  public count(): number {
+    return (
+      this.database.orm.select({ value: count() }).from(creations).get()
+        ?.value ?? 0
+    );
+  }
+
+  public findById(id: string): ContentCreation | null {
+    return (
+      this.database.orm
+        .select()
+        .from(creations)
+        .where(eq(creations.id, id))
+        .get() ?? null
+    );
+  }
+}
 
 const accountFields = {
   id: accounts.id,

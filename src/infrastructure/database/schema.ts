@@ -1,6 +1,7 @@
 import {
   index,
   integer,
+  real,
   sqliteTable,
   text,
   uniqueIndex,
@@ -8,6 +9,8 @@ import {
 
 import type {
   AccountConnectionState,
+  AiProviderKind,
+  ContentCreation,
   ContentKind,
   ContentState,
   JobState,
@@ -16,6 +19,42 @@ import type {
   Platform,
   UploadSession,
 } from "../../domain/model.js";
+
+export const aiProviderProfiles = sqliteTable("ai_provider_profiles", {
+  kind: text("kind").$type<AiProviderKind>().primaryKey(),
+  model: text("model").notNull(),
+  baseUrl: text("base_url").notNull(),
+  active: integer("active", { mode: "boolean" }).notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const creations = sqliteTable(
+  "creations",
+  {
+    id: text("id").primaryKey(),
+    format: text("format").$type<ContentCreation["format"]>().notNull(),
+    topic: text("topic").notNull(),
+    audience: text("audience").notNull(),
+    tone: text("tone").notNull(),
+    language: text("language").notNull(),
+    title: text("title").notNull(),
+    hook: text("hook").notNull(),
+    script: text("script").notNull(),
+    caption: text("caption").notNull(),
+    hashtags: text("hashtags", { mode: "json" })
+      .$type<readonly string[]>()
+      .notNull(),
+    providerKind: text("provider_kind").$type<AiProviderKind>().notNull(),
+    model: text("model").notNull(),
+    promptTokens: integer("prompt_tokens"),
+    completionTokens: integer("completion_tokens"),
+    durationMs: real("duration_ms").notNull(),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (table) => [index("creations_created_at_idx").on(table.createdAt)],
+);
 
 export const accounts = sqliteTable(
   "accounts",

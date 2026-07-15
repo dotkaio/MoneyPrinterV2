@@ -8,7 +8,9 @@ import {
 } from "./infrastructure/database/client.js";
 import {
   AccountRepository,
+  AiProviderProfileRepository,
   AffiliateRepository,
+  ContentCreationRepository,
   ContentRepository,
   JobRepository,
   OutreachRepository,
@@ -24,7 +26,9 @@ export interface Runtime {
   database: DatabaseContext;
   logger: Logger;
   accounts: AccountRepository;
+  aiProviders: AiProviderProfileRepository;
   connections: AccountConnectionRepository;
+  creations: ContentCreationRepository;
   content: ContentRepository;
   jobs: JobRepository;
   schedules: ScheduleRepository;
@@ -52,7 +56,9 @@ export function createRuntime(configPath?: string): Runtime {
     database,
     logger,
     accounts: new AccountRepository(database),
+    aiProviders: new AiProviderProfileRepository(database),
     connections: new AccountConnectionRepository(database),
+    creations: new ContentCreationRepository(database),
     content: new ContentRepository(database),
     jobs: new JobRepository(database),
     schedules: new ScheduleRepository(database),

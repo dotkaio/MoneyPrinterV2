@@ -16,7 +16,7 @@
     "image": {
       "kind": "gemini",
       "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
-      "model": "gemini-3.1-flash-image-preview",
+      "model": "gemini-3.1-flash-image",
       "apiKeyEnv": "GEMINI_API_KEY",
       "aspectRatio": "9:16"
     },

@@ -10,9 +10,13 @@ auto.sh
 .DS_Store
 node_modules/
 dist/
+release/
 coverage/
 data/
 .pnpm-store/
+.vercel/
 AGENTS 2.md
 README 2.md
 src/application/preflight 2.ts
+build/icon.iconset/
+.vercel

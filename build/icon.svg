@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="surface" x1="176" y1="112" x2="840" y2="912" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#282825"/>
+      <stop offset="1" stop-color="#111110"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="686" y1="190" x2="836" y2="348" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8F0C8"/>
+      <stop offset="1" stop-color="#CFE7B0"/>
+    </linearGradient>
+  </defs>
+  <rect x="62" y="62" width="900" height="900" rx="220" fill="url(#surface)"/>
+  <rect x="92" y="92" width="840" height="840" rx="192" fill="none" stroke="#FFFFFF" stroke-opacity="0.09" stroke-width="3"/>
+  <path d="M742 174C754 223 780 249 830 262C780 275 754 301 742 350C729 301 703 275 654 262C703 249 729 223 742 174Z" fill="url(#accent)"/>
+  <text x="503" y="663" fill="#F8F7F1" font-family="Arial, Helvetica, sans-serif" font-size="326" font-weight="700" letter-spacing="-28" text-anchor="middle">MP</text>
+  <rect x="254" y="745" width="516" height="24" rx="12" fill="#F8F7F1" fill-opacity="0.16"/>
+  <rect x="334" y="797" width="356" height="18" rx="9" fill="#F8F7F1" fill-opacity="0.1"/>
+</svg>

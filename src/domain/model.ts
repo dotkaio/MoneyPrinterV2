@@ -10,6 +10,63 @@ export const platforms = [
 
 export type Platform = (typeof platforms)[number];
 
+export const aiProviderKinds = [
+  "groq",
+  "gemini",
+  "mistral",
+  "openrouter",
+  "cerebras",
+  "cohere",
+  "nvidia",
+  "openai",
+  "anthropic",
+  "xai",
+  "deepseek",
+  "together",
+  "fireworks",
+] as const;
+
+export type AiProviderKind = (typeof aiProviderKinds)[number];
+
+export interface AiProviderProfile {
+  kind: AiProviderKind;
+  model: string;
+  baseUrl: string;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const creationFormats = [
+  "short-video",
+  "social-post",
+  "newsletter",
+  "ad-copy",
+] as const;
+
+export type CreationFormat = (typeof creationFormats)[number];
+
+export interface ContentCreation {
+  id: string;
+  format: CreationFormat;
+  topic: string;
+  audience: string;
+  tone: string;
+  language: string;
+  title: string;
+  hook: string;
+  script: string;
+  caption: string;
+  hashtags: readonly string[];
+  providerKind: AiProviderKind;
+  model: string;
+  promptTokens: number | null;
+  completionTokens: number | null;
+  durationMs: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type ContentKind =
   "youtube-short" | "twitter-post" | "social-post" | "affiliate-pitch";
 

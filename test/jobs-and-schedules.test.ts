@@ -9,6 +9,7 @@ import type { Job } from "../src/domain/model.js";
 import { createRuntime, type Runtime } from "../src/runtime.js";
 import { AppError } from "../src/shared/errors.js";
 import { JobWorker, type JobHandler } from "../src/worker/job-worker.js";
+import { WorkerService } from "../src/worker/worker-service.js";
 
 const directories: string[] = [];
 
@@ -75,6 +76,29 @@ describe("durable jobs", () => {
 
     expect(runtime.jobs.findById(retrying.id)?.state).toBe("retrying");
     expect(runtime.jobs.findById(unknown.id)?.state).toBe("failed");
+    runtime.close();
+  });
+
+  it("runs inside the application process and stops without waiting for the next poll", async () => {
+    const runtime = testRuntime();
+    const handler = vi
+      .fn<(job: Job, runtime: Runtime) => Promise<void>>()
+      .mockResolvedValue();
+    runtime.jobs.enqueue({
+      type: "fixture",
+      payload: {},
+      idempotencyKey: "fixture:embedded-worker",
+      maximumAttempts: 3,
+    });
+    const worker = new WorkerService(runtime, {
+      workerId: "embedded-worker",
+      handlers: new Map([["fixture", handler]]),
+    });
+
+    const running = worker.start();
+    await vi.waitFor(() => expect(handler).toHaveBeenCalledOnce());
+    await expect(worker.stop("test")).resolves.toBeUndefined();
+    await expect(running).resolves.toBeUndefined();
     runtime.close();
   });
 });

@@ -16,8 +16,11 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./src/interface/web/*"]
+    },
     "types": ["node", "vitest/globals"]
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "*.config.ts"],
-  "exclude": ["dist", "node_modules"]
+  "include": ["api/**/*.ts", "src/**/*.ts", "test/**/*.ts", "*.config.ts"],
+  "exclude": ["dist", "node_modules", "src/interface/web"]
 }

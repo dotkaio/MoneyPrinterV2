@@ -1,4 +1,8 @@
 allowBuilds:
   better-sqlite3: true
+  electron: true
+  electron-winstaller: false
   esbuild: true
+minimumReleaseAgeExclude:
+  - electron@43.1.1
 verifyDepsBeforeRun: false

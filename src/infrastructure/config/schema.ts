@@ -33,7 +33,7 @@ export const appConfigSchema = z.object({
           baseUrl: z
             .url()
             .default("https://generativelanguage.googleapis.com/v1beta"),
-          model: z.string().min(1).default("gemini-3.1-flash-image-preview"),
+          model: z.string().min(1).default("gemini-3.1-flash-image"),
           apiKeyEnv: z.string().min(1).default("GEMINI_API_KEY"),
           aspectRatio: z.string().min(1).default("9:16"),
         })
